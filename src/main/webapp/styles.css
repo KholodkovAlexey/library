@@ -1,0 +1,29 @@
+.overlay {
+    background: #000;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    opacity: .5;
+}
+.visible {
+    background: #fff;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-top: -200px;
+    overflow: hidden;
+    z-index: 2;
+    padding: 0px;
+    margin-left: -250px;
+}
+.refbutton {
+    border: none;
+    background: transparent;
+    color: blue;
+}
+.order {
+    color: red;
+}
