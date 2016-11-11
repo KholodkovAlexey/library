@@ -14,7 +14,7 @@
         <div>Неправильные имя пользователя или пароль.</div>
         <%}%>
 
-        <form class="login-form" action="/j_spring_security_check" method="post" onsubmit="setUserName(document.getElementById('j_username').value);return true">
+        <form class="login-form" action="j_spring_security_check" method="post" onsubmit="setUserName(document.getElementById('j_username').value);return true">
             <table>
                 <tr>
                     <th><label for="j_username">Имя: </label></th>
