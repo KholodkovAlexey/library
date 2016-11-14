@@ -1,25 +1,54 @@
 package librarywebapp.db;
 
+import java.sql.SQLException;
+import liquibase.Contexts;
+import liquibase.LabelExpression;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 public class DbHandler {
 
+    static private final SimpleDriverDataSource DATA_SOURCE = new SimpleDriverDataSource();
     static public final JdbcTemplate JT = InitDb();
 
     static {
-        CreateTables();
-        InsertData();
+        try {
+            String fpath = "/home/alexey/NetBeansProjects/library/src/main/webapp/liquibase_init.sql";
+
+            PrepareByLiquibase(fpath);
+            
+            System.out.println("Liquibase started");
+        } catch (SQLException | LiquibaseException e) {
+            System.out.println("Failed to prepare by liquibase: " + e);
+            
+        }
+        PrepareDb();
     }
 
     static private JdbcTemplate InitDb() {
-        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-        dataSource.setDriverClass(org.h2.Driver.class);
-        dataSource.setUsername("sa");
-        dataSource.setUrl("jdbc:h2:./mem");
-        dataSource.setPassword("");
+        DATA_SOURCE.setDriverClass(org.h2.Driver.class);
+        DATA_SOURCE.setUsername("sa");
+        DATA_SOURCE.setUrl("jdbc:h2:./mem");
+        DATA_SOURCE.setPassword("");
 
-        return new JdbcTemplate(dataSource);
+        return new JdbcTemplate(DATA_SOURCE);
+    }
+
+    static private void PrepareByLiquibase(String path) throws SQLException, DatabaseException, LiquibaseException {
+        java.sql.Connection connection = DATA_SOURCE.getConnection();
+
+        Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+
+        Liquibase liquibase = new liquibase.Liquibase(path, new ClassLoaderResourceAccessor(), database);
+
+        liquibase.update(new Contexts(), new LabelExpression());
     }
 
     static private void CreateTables() {
@@ -77,6 +106,11 @@ public class DbHandler {
         JT.execute("INSERT INTO books (isn, author, title, borrower_id)\n"
                 + "	VALUES ('0000-0000-0008','TestAuthor','TestTitle8',null)");
 
+    }
+
+    static public void PrepareDb() {
+        CreateTables();
+        InsertData();
     }
 
     private DbHandler() {

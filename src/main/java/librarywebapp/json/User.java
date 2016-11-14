@@ -1,5 +1,6 @@
 package librarywebapp.json;
 
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 
 public final class User implements JSONConvertible{
@@ -35,6 +36,29 @@ public final class User implements JSONConvertible{
         res += "\"name\":\"" + name + '\"';
         
         return res + "}";
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        boolean res = obj != null;
+        
+        if (res) {
+            res = getClass() == obj.getClass();
+
+            if (res) {
+                User user = (User) obj;
+                res = name.equals(user.getName());
+            }
+        }
+
+        return res;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.name);
+        return hash;
     }
     
 }
