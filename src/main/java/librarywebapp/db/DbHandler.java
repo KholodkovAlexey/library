@@ -35,7 +35,7 @@ public class DbHandler {
     static private JdbcTemplate InitDb() {
         DATA_SOURCE.setDriverClass(org.h2.Driver.class);
         DATA_SOURCE.setUsername("sa");
-        DATA_SOURCE.setUrl("jdbc:h2:./mem");
+        DATA_SOURCE.setUrl("jdbc:h2:./mem;MV_STORE=FALSE");
         DATA_SOURCE.setPassword("");
 
         return new JdbcTemplate(DATA_SOURCE);
